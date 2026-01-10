@@ -9,7 +9,10 @@ import {
   Wrench,
   Clock,
   CheckCircle,
-  Star
+  Star,
+  Zap,
+  Award,
+  ThumbsUp
 } from "lucide-react";
 import { getPageContent } from "@/lib/data/settings-db";
 
@@ -19,49 +22,46 @@ export const metadata: Metadata = {
     "Learn about Fix it, papa! - your trusted local handyman service. Discover our story, values, and commitment to quality workmanship.",
 };
 
-const values = [
-  {
-    icon: Shield,
-    title: "Reliability",
-    description:
-      "We show up on time, every time. When we commit to a job, you can count on us to see it through with professionalism.",
-  },
-  {
-    icon: Heart,
-    title: "Integrity",
-    description:
-      "Honest pricing, transparent communication, and doing the right thing even when no one is watching.",
-  },
-  {
-    icon: Target,
-    title: "Quality",
-    description:
-      "We take pride in our work. Every installation, repair, and upgrade is done to the highest standards.",
-  },
-  {
-    icon: Clock,
-    title: "Efficiency",
-    description:
-      "Your time is valuable. We work efficiently without cutting corners, completing jobs promptly and correctly.",
-  },
-];
-
-const defaultCertifications = [
-  "Licensed Electrical Contractor",
-  "Fully Insured & Bonded",
-  "EPA Certified",
-  "OSHA Safety Trained",
-  "Smart Home Certified",
-  "Ring Pro Installer",
-];
+// Icon mapping for dynamic icons
+const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
+  Shield,
+  Heart,
+  Target,
+  Clock,
+  Wrench,
+  Star,
+  Zap,
+  Award,
+  CheckCircle,
+  ThumbsUp,
+};
 
 export default async function AboutPage() {
   const pageContent = await getPageContent();
   const about = pageContent.about;
   
+  // Fallback values
+  const values = about.values && about.values.length > 0 
+    ? about.values 
+    : [
+        { icon: "Shield", title: "Reliability", description: "We show up on time, every time. When we commit to a job, you can count on us to see it through with professionalism." },
+        { icon: "Heart", title: "Integrity", description: "Honest pricing, transparent communication, and doing the right thing even when no one is watching." },
+        { icon: "Target", title: "Quality", description: "We take pride in our work. Every installation, repair, and upgrade is done to the highest standards." },
+        { icon: "Clock", title: "Efficiency", description: "Your time is valuable. We work efficiently without cutting corners, completing jobs promptly and correctly." },
+      ];
+
+  const whyChooseUs = about.why_choose_us && about.why_choose_us.length > 0
+    ? about.why_choose_us
+    : [
+        { title: "Transparent Pricing", description: "No hidden fees or surprise charges. We provide detailed quotes upfront." },
+        { title: "Clean & Respectful", description: "We treat your home with care, wearing shoe covers and cleaning up after every job." },
+        { title: "Guaranteed Work", description: "All our work is backed by a satisfaction guarantee. If it's not right, we'll fix it." },
+        { title: "Fast Response", description: "Same-day and next-day appointments available. We know electrical issues can't wait." },
+      ];
+
   const certifications = about.certifications && about.certifications.length > 0 
     ? about.certifications 
-    : defaultCertifications;
+    : ["Licensed Electrical Contractor", "Fully Insured & Bonded", "EPA Certified", "OSHA Safety Trained", "Smart Home Certified", "Ring Pro Installer"];
 
   return (
     <div className="pt-20">
@@ -77,19 +77,14 @@ export default async function AboutPage() {
                 About Us
               </span>
               <h1 className="font-heading text-4xl sm:text-5xl font-bold text-white mb-6">
-                Your Trusted Partner for{" "}
-                <span className="text-gradient">Home Electrical Needs</span>
+                {about.hero_headline || "Your Trusted Partner for"}{" "}
+                <span className="text-gradient">{about.hero_headline_highlight || "Home Electrical Needs"}</span>
               </h1>
               <p className="text-lg text-charcoal-300 mb-6">
-                Fix it, papa! was founded with a simple mission: to provide 
-                homeowners with reliable, professional, and affordable electrical 
-                and handyman services. We believe every home deserves to have 
-                working, safe, and modern electrical systems.
+                {about.hero_description || "Fix it, papa! was founded with a simple mission: to provide homeowners with reliable, professional, and affordable electrical and handyman services. We believe every home deserves to have working, safe, and modern electrical systems."}
               </p>
               <p className="text-charcoal-400 mb-8">
-                What started as a one-person operation has grown into a trusted 
-                local service, but our core values remain the same. We treat 
-                every home like our own, every customer like family.
+                {about.hero_description_secondary || "What started as a one-person operation has grown into a trusted local service, but our core values remain the same. We treat every home like our own, every customer like family."}
               </p>
               <Link href="/contact">
                 <Button rightIcon={<ArrowRight className="w-5 h-5" />}>
@@ -133,13 +128,10 @@ export default async function AboutPage() {
                 {about.company_story || "With over a decade of experience in the electrical trade, our founder saw a gap in the market: homeowners needed reliable, fairly-priced help with everyday electrical tasks that didn't require a full contractor."}
               </p>
               <p>
-                From replacing a ceiling fan to installing a complete smart home 
-                lighting system, we fill that need. We bring professional expertise 
-                to every job, whether it&apos;s a 30-minute outlet repair or an 
-                all-day installation project.
+                {about.story_paragraph_2 || "From replacing a ceiling fan to installing a complete smart home lighting system, we fill that need. We bring professional expertise to every job, whether it's a 30-minute outlet repair or an all-day installation project."}
               </p>
               <p>
-                Today, Fix it, papa! has completed over {about.jobs_completed || "1,200+"} jobs for more than 
+                Today, Fix it, papa! has completed over {about.jobs_completed || "1,200+"} jobs for more than
                 {" "}{about.happy_customers || "500+"} satisfied customers across the Metro area. We&apos;re proud of 
                 our {about.average_rating || "5.0"}-star reputation and the trust our community has placed in us.
               </p>
@@ -162,7 +154,7 @@ export default async function AboutPage() {
 
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {values.map((value) => {
-              const Icon = value.icon;
+              const Icon = iconMap[value.icon] || Shield;
               return (
                 <Card key={value.title} className="text-center">
                   <CardContent>
@@ -222,24 +214,7 @@ export default async function AboutPage() {
               </h2>
               
               <div className="space-y-6">
-                {[
-                  {
-                    title: "Transparent Pricing",
-                    description: "No hidden fees or surprise charges. We provide detailed quotes upfront.",
-                  },
-                  {
-                    title: "Clean & Respectful",
-                    description: "We treat your home with care, wearing shoe covers and cleaning up after every job.",
-                  },
-                  {
-                    title: "Guaranteed Work",
-                    description: "All our work is backed by a satisfaction guarantee. If it's not right, we'll fix it.",
-                  },
-                  {
-                    title: "Fast Response",
-                    description: "Same-day and next-day appointments available. We know electrical issues can't wait.",
-                  },
-                ].map((item, i) => (
+                {whyChooseUs.map((item, i) => (
                   <div key={i} className="flex gap-4">
                     <div className="flex-shrink-0 w-10 h-10 bg-electric rounded-lg flex items-center justify-center">
                       <CheckCircle className="w-5 h-5 text-charcoal" />
@@ -303,11 +278,10 @@ export default async function AboutPage() {
         <div className="container-custom">
           <div className="text-center max-w-2xl mx-auto">
             <h2 className="font-heading text-3xl sm:text-4xl font-bold text-white mb-4">
-              Let&apos;s Work Together
+              {about.cta_headline || "Let's Work Together"}
             </h2>
             <p className="text-charcoal-300 mb-8">
-              Whether you have a quick question or need to schedule a service, 
-              we&apos;re here to help.
+              {about.cta_description || "Whether you have a quick question or need to schedule a service, we're here to help."}
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link href="/services">

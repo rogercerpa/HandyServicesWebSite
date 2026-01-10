@@ -64,6 +64,17 @@ export async function getSiteSettings(): Promise<SiteSettings> {
   }
 }
 
+export interface AboutValue {
+  icon: string;
+  title: string;
+  description: string;
+}
+
+export interface WhyChooseUsItem {
+  title: string;
+  description: string;
+}
+
 export interface PageContent {
   hero: {
     badge_text: string;
@@ -73,12 +84,28 @@ export interface PageContent {
     trust_points: string[];
   };
   about: {
+    // Hero section
+    hero_headline: string;
+    hero_headline_highlight: string;
+    hero_description: string;
+    hero_description_secondary: string;
+    // Our Story section
     company_story: string;
+    story_paragraph_2: string;
+    // Stats
     years_experience: string;
     jobs_completed: string;
     happy_customers: string;
     average_rating: string;
+    // Certifications
     certifications: string[];
+    // Values section
+    values: AboutValue[];
+    // Why Choose Us section
+    why_choose_us: WhyChooseUsItem[];
+    // CTA section
+    cta_headline: string;
+    cta_description: string;
   };
   cta: {
     headline: string;
@@ -97,12 +124,38 @@ const defaultPageContent: PageContent = {
     trust_points: ["Licensed & Insured", "Same-Day Service", "Satisfaction Guaranteed"],
   },
   about: {
+    // Hero section
+    hero_headline: "Your Trusted Partner for",
+    hero_headline_highlight: "Home Electrical Needs",
+    hero_description: "Fix it, papa! was founded with a simple mission: to provide homeowners with reliable, professional, and affordable electrical and handyman services. We believe every home deserves to have working, safe, and modern electrical systems.",
+    hero_description_secondary: "What started as a one-person operation has grown into a trusted local service, but our core values remain the same. We treat every home like our own, every customer like family.",
+    // Our Story section
     company_story: "With over a decade of experience in the electrical trade, our founder saw a gap in the market: homeowners needed reliable, fairly-priced help with everyday electrical tasks that didn't require a full contractor.",
+    story_paragraph_2: "From replacing a ceiling fan to installing a complete smart home lighting system, we fill that need. We bring professional expertise to every job, whether it's a 30-minute outlet repair or an all-day installation project.",
+    // Stats
     years_experience: "10+",
     jobs_completed: "1,200+",
     happy_customers: "500+",
     average_rating: "5.0",
+    // Certifications
     certifications: ["Licensed Electrical Contractor", "Fully Insured & Bonded", "EPA Certified", "OSHA Safety Trained", "Smart Home Certified", "Ring Pro Installer"],
+    // Values
+    values: [
+      { icon: "Shield", title: "Reliability", description: "We show up on time, every time. When we commit to a job, you can count on us to see it through with professionalism." },
+      { icon: "Heart", title: "Integrity", description: "Honest pricing, transparent communication, and doing the right thing even when no one is watching." },
+      { icon: "Target", title: "Quality", description: "We take pride in our work. Every installation, repair, and upgrade is done to the highest standards." },
+      { icon: "Clock", title: "Efficiency", description: "Your time is valuable. We work efficiently without cutting corners, completing jobs promptly and correctly." },
+    ],
+    // Why Choose Us
+    why_choose_us: [
+      { title: "Transparent Pricing", description: "No hidden fees or surprise charges. We provide detailed quotes upfront." },
+      { title: "Clean & Respectful", description: "We treat your home with care, wearing shoe covers and cleaning up after every job." },
+      { title: "Guaranteed Work", description: "All our work is backed by a satisfaction guarantee. If it's not right, we'll fix it." },
+      { title: "Fast Response", description: "Same-day and next-day appointments available. We know electrical issues can't wait." },
+    ],
+    // CTA
+    cta_headline: "Let's Work Together",
+    cta_description: "Whether you have a quick question or need to schedule a service, we're here to help.",
   },
   cta: {
     headline: "Ready to Get Your Project",
