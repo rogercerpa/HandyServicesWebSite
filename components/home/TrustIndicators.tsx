@@ -1,33 +1,37 @@
 import { Award, Clock, Users, ThumbsUp } from "lucide-react";
+import { getPageContent } from "@/lib/data/settings-db";
 
-const stats = [
-  {
-    icon: Users,
-    value: "500+",
-    label: "Happy Customers",
-    description: "Homeowners trust us",
-  },
-  {
-    icon: Clock,
-    value: "10+",
-    label: "Years Experience",
-    description: "In the industry",
-  },
-  {
-    icon: ThumbsUp,
-    value: "98%",
-    label: "Satisfaction Rate",
-    description: "5-star reviews",
-  },
-  {
-    icon: Award,
-    value: "1,200+",
-    label: "Jobs Completed",
-    description: "And counting",
-  },
-];
+export async function TrustIndicators() {
+  const pageContent = await getPageContent();
+  const about = pageContent.about;
 
-export function TrustIndicators() {
+  const stats = [
+    {
+      icon: Users,
+      value: about.happy_customers,
+      label: "Happy Customers",
+      description: "Homeowners trust us",
+    },
+    {
+      icon: Clock,
+      value: about.years_experience,
+      label: "Years Experience",
+      description: "In the industry",
+    },
+    {
+      icon: ThumbsUp,
+      value: "98%",
+      label: "Satisfaction Rate",
+      description: "5-star reviews",
+    },
+    {
+      icon: Award,
+      value: about.jobs_completed,
+      label: "Jobs Completed",
+      description: "And counting",
+    },
+  ];
+
   return (
     <section className="py-16 bg-charcoal-900 border-y border-charcoal-800">
       <div className="container-custom">
@@ -56,4 +60,3 @@ export function TrustIndicators() {
     </section>
   );
 }
-

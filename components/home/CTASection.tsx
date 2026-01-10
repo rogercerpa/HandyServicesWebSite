@@ -1,8 +1,17 @@
 import Link from "next/link";
 import { Button } from "@/components/ui";
 import { ArrowRight, Phone, Calendar } from "lucide-react";
+import { getSiteSettings, getPageContent } from "@/lib/data/settings-db";
 
-export function CTASection() {
+export async function CTASection() {
+  const [settings, pageContent] = await Promise.all([
+    getSiteSettings(),
+    getPageContent(),
+  ]);
+  
+  const cta = pageContent.cta;
+  const phoneClean = settings.phone.replace(/[^0-9+]/g, '');
+
   return (
     <section className="section-padding relative overflow-hidden">
       <div className="container-custom">
@@ -20,12 +29,11 @@ export function CTASection() {
 
             {/* Content */}
             <h2 className="font-heading text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-6">
-              Ready to Get Your Project{" "}
-              <span className="text-gradient">Done Right?</span>
+              {cta.headline}{" "}
+              <span className="text-gradient">{cta.headline_highlight}</span>
             </h2>
             <p className="text-lg text-charcoal-300 mb-10 max-w-2xl mx-auto">
-              Get a free quote in minutes. Our friendly team is ready to help 
-              with any electrical or handyman project, big or small.
+              {cta.description}
             </p>
 
             {/* CTA Buttons */}
@@ -35,7 +43,7 @@ export function CTASection() {
                   Get Your Free Quote
                 </Button>
               </Link>
-              <Link href="tel:+1234567890">
+              <Link href={`tel:${phoneClean}`}>
                 <Button variant="secondary" size="lg" leftIcon={<Phone className="w-5 h-5" />}>
                   Call Now
                 </Button>
@@ -44,7 +52,7 @@ export function CTASection() {
 
             {/* Trust note */}
             <p className="mt-8 text-sm text-charcoal-400">
-              No obligation • Free estimates • Same-day response
+              {cta.trust_note}
             </p>
           </div>
         </div>
@@ -52,4 +60,3 @@ export function CTASection() {
     </section>
   );
 }
-

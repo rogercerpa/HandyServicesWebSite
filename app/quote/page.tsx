@@ -85,9 +85,36 @@ function QuoteWizardContent() {
 
   const handleSubmit = async () => {
     setIsSubmitting(true);
-    await new Promise((resolve) => setTimeout(resolve, 2000));
+    
+    try {
+      const response = await fetch("/api/quote", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          serviceId: selectedService,
+          serviceName: currentConfig?.serviceName,
+          answers,
+          estimatedPrice,
+          contactName: contactInfo.name,
+          contactEmail: contactInfo.email,
+          contactPhone: contactInfo.phone,
+          contactAddress: contactInfo.address,
+          preferredDate: contactInfo.preferredDate,
+          notes: contactInfo.notes,
+        }),
+      });
+      
+      if (!response.ok) {
+        throw new Error("Failed to submit quote request");
+      }
+      
+      setIsSubmitted(true);
+    } catch (error) {
+      console.error("Error submitting quote:", error);
+      alert("Failed to submit quote request. Please try again.");
+    }
+    
     setIsSubmitting(false);
-    setIsSubmitted(true);
   };
 
   const canProceed = () => {

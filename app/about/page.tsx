@@ -1,5 +1,4 @@
 import { Metadata } from "next";
-import Image from "next/image";
 import Link from "next/link";
 import { Button, Card, CardContent } from "@/components/ui";
 import { 
@@ -7,12 +6,12 @@ import {
   Shield, 
   Heart, 
   Target, 
-  Award, 
   Wrench,
   Clock,
   CheckCircle,
   Star
 } from "lucide-react";
+import { getPageContent } from "@/lib/data/settings-db";
 
 export const metadata: Metadata = {
   title: "About Us | Fix it, papa! - Professional Handyman Services",
@@ -47,7 +46,7 @@ const values = [
   },
 ];
 
-const certifications = [
+const defaultCertifications = [
   "Licensed Electrical Contractor",
   "Fully Insured & Bonded",
   "EPA Certified",
@@ -56,7 +55,14 @@ const certifications = [
   "Ring Pro Installer",
 ];
 
-export default function AboutPage() {
+export default async function AboutPage() {
+  const pageContent = await getPageContent();
+  const about = pageContent.about;
+  
+  const certifications = about.certifications && about.certifications.length > 0 
+    ? about.certifications 
+    : defaultCertifications;
+
   return (
     <div className="pt-20">
       {/* Hero Section */}
@@ -124,10 +130,7 @@ export default function AboutPage() {
             </h2>
             <div className="text-charcoal-300 space-y-4 text-left">
               <p>
-                With over a decade of experience in the electrical trade, our 
-                founder saw a gap in the market: homeowners needed reliable, 
-                fairly-priced help with everyday electrical tasks that didn&apos;t 
-                require a full contractor.
+                {about.company_story || "With over a decade of experience in the electrical trade, our founder saw a gap in the market: homeowners needed reliable, fairly-priced help with everyday electrical tasks that didn't require a full contractor."}
               </p>
               <p>
                 From replacing a ceiling fan to installing a complete smart home 
@@ -136,9 +139,9 @@ export default function AboutPage() {
                 all-day installation project.
               </p>
               <p>
-                Today, Fix it, papa! has completed over 1,200 jobs for more than 
-                500 satisfied customers across the Metro area. We&apos;re proud of 
-                our 5-star reputation and the trust our community has placed in us.
+                Today, Fix it, papa! has completed over {about.jobs_completed || "1,200+"} jobs for more than 
+                {" "}{about.happy_customers || "500+"} satisfied customers across the Metro area. We&apos;re proud of 
+                our {about.average_rating || "5.0"}-star reputation and the trust our community has placed in us.
               </p>
             </div>
           </div>
@@ -255,25 +258,25 @@ export default function AboutPage() {
               <div className="grid grid-cols-2 gap-8">
                 <div className="text-center">
                   <div className="font-heading text-4xl font-bold text-electric mb-2">
-                    10+
+                    {about.years_experience || "10+"}
                   </div>
                   <p className="text-charcoal-300">Years Experience</p>
                 </div>
                 <div className="text-center">
                   <div className="font-heading text-4xl font-bold text-electric mb-2">
-                    1,200+
+                    {about.jobs_completed || "1,200+"}
                   </div>
                   <p className="text-charcoal-300">Jobs Completed</p>
                 </div>
                 <div className="text-center">
                   <div className="font-heading text-4xl font-bold text-electric mb-2">
-                    500+
+                    {about.happy_customers || "500+"}
                   </div>
                   <p className="text-charcoal-300">Happy Customers</p>
                 </div>
                 <div className="text-center">
                   <div className="flex items-center justify-center gap-1 mb-2">
-                    <span className="font-heading text-4xl font-bold text-electric">5.0</span>
+                    <span className="font-heading text-4xl font-bold text-electric">{about.average_rating || "5.0"}</span>
                     <Star className="w-6 h-6 text-electric fill-electric" />
                   </div>
                   <p className="text-charcoal-300">Average Rating</p>
@@ -324,4 +327,3 @@ export default function AboutPage() {
     </div>
   );
 }
-

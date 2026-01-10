@@ -8,6 +8,9 @@
     --foreground: #ffffff;
     --muted: #a4a4a4;
     --accent: #FFD60A;
+    /* Dynamic theme colors - can be overridden by ThemeProvider */
+    --color-electric: #EEFF00;
+    --color-accent-orange: #FF6B35;
   }
 
   * {

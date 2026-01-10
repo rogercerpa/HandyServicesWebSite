@@ -1,8 +1,17 @@
 import Link from "next/link";
 import { Button } from "@/components/ui";
 import { ArrowRight, Phone, Star, CheckCircle } from "lucide-react";
+import { getSiteSettings, getPageContent } from "@/lib/data/settings-db";
 
-export function Hero() {
+export async function Hero() {
+  const [settings, pageContent] = await Promise.all([
+    getSiteSettings(),
+    getPageContent(),
+  ]);
+  
+  const hero = pageContent.hero;
+  const phoneClean = settings.phone.replace(/[^0-9+]/g, '');
+
   return (
     <section className="relative min-h-[90vh] flex items-center overflow-hidden">
       {/* Background Effects */}
@@ -19,22 +28,20 @@ export function Hero() {
           <div className="inline-flex items-center gap-2 bg-charcoal-800/80 backdrop-blur-sm border border-charcoal-700 rounded-full px-4 py-2 mb-8 animate-fade-in">
             <Star className="w-4 h-4 text-electric fill-electric" />
             <span className="text-sm text-charcoal-200">
-              Trusted by 500+ homeowners in the Metro Area
+              {hero.badge_text}
             </span>
           </div>
 
           {/* Headline */}
           <h1 className="font-heading text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-white mb-6 animate-fade-in-up">
-            Expert Electrical &{" "}
-            <span className="text-gradient">Handyman Services</span>{" "}
+            {hero.headline}{" "}
+            <span className="text-gradient">{hero.headline_highlight}</span>{" "}
             You Can Trust
           </h1>
 
           {/* Subheadline */}
           <p className="text-lg sm:text-xl text-charcoal-300 max-w-2xl mb-10 animate-fade-in-up animation-delay-100">
-            From ceiling fans to smart home installations, we handle all your 
-            electrical needs with precision, reliability, and fair pricing. 
-            Licensed professionals, guaranteed satisfaction.
+            {hero.subheadline}
           </p>
 
           {/* CTA Buttons */}
@@ -44,20 +51,16 @@ export function Hero() {
                 Get a Free Quote
               </Button>
             </Link>
-            <Link href="tel:+1234567890">
+            <Link href={`tel:${phoneClean}`}>
               <Button variant="secondary" size="lg" leftIcon={<Phone className="w-5 h-5" />}>
-                (123) 456-7890
+                {settings.phone}
               </Button>
             </Link>
           </div>
 
           {/* Trust Points */}
           <div className="flex flex-wrap gap-6 animate-fade-in-up animation-delay-300">
-            {[
-              "Licensed & Insured",
-              "Same-Day Service",
-              "Satisfaction Guaranteed",
-            ].map((point) => (
+            {hero.trust_points.map((point) => (
               <div key={point} className="flex items-center gap-2">
                 <CheckCircle className="w-5 h-5 text-electric" />
                 <span className="text-charcoal-200 font-medium">{point}</span>
@@ -72,4 +75,3 @@ export function Hero() {
     </section>
   );
 }
-
