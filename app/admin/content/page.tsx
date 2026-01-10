@@ -31,6 +31,9 @@ interface AboutContent {
   hero_headline_highlight: string;
   hero_description: string;
   hero_description_secondary: string;
+  // Hero visual
+  hero_image_url: string;
+  established_year: string;
   // Our Story section
   company_story: string;
   story_paragraph_2: string;
@@ -70,6 +73,8 @@ const defaultAbout: AboutContent = {
   hero_headline_highlight: "Home Electrical Needs",
   hero_description: "Fix it, papa! was founded with a simple mission: to provide homeowners with reliable, professional, and affordable electrical and handyman services. We believe every home deserves to have working, safe, and modern electrical systems.",
   hero_description_secondary: "What started as a one-person operation has grown into a trusted local service, but our core values remain the same. We treat every home like our own, every customer like family.",
+  hero_image_url: "",
+  established_year: "2015",
   company_story: "With over a decade of experience in the electrical trade, our founder saw a gap in the market: homeowners needed reliable, fairly-priced help with everyday electrical tasks that didn't require a full contractor.",
   story_paragraph_2: "From replacing a ceiling fan to installing a complete smart home lighting system, we fill that need. We bring professional expertise to every job, whether it's a 30-minute outlet repair or an all-day installation project.",
   years_experience: "10+",
@@ -409,6 +414,41 @@ export default function ContentPage() {
                   rows={2}
                   placeholder="What started as a one-person operation..."
                 />
+
+                <div className="pt-4 border-t border-charcoal-700">
+                  <h4 className="text-sm font-medium text-charcoal-200 mb-4">Hero Visual</h4>
+                  <div className="grid sm:grid-cols-2 gap-5">
+                    <Input
+                      label="Hero Image URL"
+                      value={about.hero_image_url}
+                      onChange={(e) => setAbout({ ...about, hero_image_url: e.target.value })}
+                      placeholder="https://example.com/image.jpg"
+                      helperText="Leave empty to show icon placeholder"
+                    />
+                    <Input
+                      label="Established Year"
+                      value={about.established_year}
+                      onChange={(e) => setAbout({ ...about, established_year: e.target.value })}
+                      placeholder="2015"
+                      helperText="Displayed as 'Est. 2015'"
+                    />
+                  </div>
+                  {about.hero_image_url && (
+                    <div className="mt-4">
+                      <p className="text-sm text-charcoal-400 mb-2">Preview:</p>
+                      <div className="w-32 h-32 rounded-xl overflow-hidden border border-charcoal-700">
+                        <img 
+                          src={about.hero_image_url} 
+                          alt="Hero preview" 
+                          className="w-full h-full object-cover"
+                          onError={(e) => {
+                            (e.target as HTMLImageElement).style.display = 'none';
+                          }}
+                        />
+                      </div>
+                    </div>
+                  )}
+                </div>
               </div>
             )}
           </div>

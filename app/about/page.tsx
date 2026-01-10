@@ -14,7 +14,8 @@ import {
   Award,
   ThumbsUp
 } from "lucide-react";
-import { getPageContent } from "@/lib/data/settings-db";
+import { getPageContent, getBrandingSettings } from "@/lib/data/settings-db";
+import Image from "next/image";
 
 export const metadata: Metadata = {
   title: "About Us | Fix it, papa! - Professional Handyman Services",
@@ -37,7 +38,10 @@ const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
 };
 
 export default async function AboutPage() {
-  const pageContent = await getPageContent();
+  const [pageContent, branding] = await Promise.all([
+    getPageContent(),
+    getBrandingSettings(),
+  ]);
   const about = pageContent.about;
   
   // Fallback values
@@ -96,14 +100,32 @@ export default async function AboutPage() {
             {/* Image/Visual */}
             <div className="relative">
               <div className="aspect-square bg-charcoal-800 rounded-3xl overflow-hidden border border-charcoal-700">
-                <div className="absolute inset-0 bg-gradient-to-br from-electric/20 to-transparent" />
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <div className="text-center">
-                    <Wrench className="w-24 h-24 text-electric mx-auto mb-4" />
-                    <p className="font-heading text-2xl font-bold text-white">Fix it, papa!</p>
-                    <p className="text-charcoal-400">Est. 2015</p>
-                  </div>
-                </div>
+                {about.hero_image_url ? (
+                  <>
+                    <Image
+                      src={about.hero_image_url}
+                      alt={branding.business_name || "Fix it, papa!"}
+                      fill
+                      className="object-cover"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-charcoal-900/80 to-transparent" />
+                    <div className="absolute bottom-6 left-6 right-6 text-center">
+                      <p className="font-heading text-2xl font-bold text-white">{branding.business_name || "Fix it, papa!"}</p>
+                      <p className="text-charcoal-300">Est. {about.established_year || "2015"}</p>
+                    </div>
+                  </>
+                ) : (
+                  <>
+                    <div className="absolute inset-0 bg-gradient-to-br from-electric/20 to-transparent" />
+                    <div className="absolute inset-0 flex items-center justify-center">
+                      <div className="text-center">
+                        <Wrench className="w-24 h-24 text-electric mx-auto mb-4" />
+                        <p className="font-heading text-2xl font-bold text-white">{branding.business_name || "Fix it, papa!"}</p>
+                        <p className="text-charcoal-400">Est. {about.established_year || "2015"}</p>
+                      </div>
+                    </div>
+                  </>
+                )}
               </div>
               {/* Decorative elements */}
               <div className="absolute -bottom-6 -right-6 w-48 h-48 bg-electric/20 rounded-2xl -z-10" />
