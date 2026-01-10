@@ -1,0 +1,20 @@
+PROFIT CALCULATOR,,
+Variable Costs,,
+Selling Price (no sales tax),$180.00,
+Landed Product Cost,$30.00,
+Packaging Costs,$2.00,
+3PL Pick & Pack Fee,$3.50,
+Shipping,$5.00,
+Gateway Fee ~ 4%,$7.20,"=B3*0.04"
+SALES DATA,,
+COGS %,22.50%,"=SUM(B4:B7)/B3"
+Gross Margin ($),$139.50,"=B3-SUM(B4:B7)"
+Gross Margin (%),"77.50%","=B11/B3"
+Markup,4.65,"=B11/B4"
+MARKETING DATA,,
+Customer Acquisition Cost,$90.00,
+MER,50.00%,"=B15/B3"
+ROAS,2,"=B3/B15"
+PROFIT,,
+Net Profit,$49.50,"=B11-B15"
+

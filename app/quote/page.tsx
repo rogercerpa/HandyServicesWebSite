@@ -5,6 +5,7 @@ import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { Card, CardContent, Button, Input, Select } from "@/components/ui";
 import { services } from "@/lib/data/services";
+import { createClient } from "@/lib/supabase/client";
 import { 
   quoteConfigurations, 
   getQuoteConfigByServiceId, 
@@ -48,13 +49,42 @@ function QuoteWizardContent() {
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [businessPhone, setBusinessPhone] = useState("(123) 456-7890");
+
+  // Fetch site settings for phone number
+  useEffect(() => {
+    async function fetchSettings() {
+      const supabase = createClient();
+      const { data } = await supabase
+        .from("site_settings")
+        .select("value")
+        .eq("key", "phone")
+        .single();
+      
+      if (data?.value) {
+        setBusinessPhone(typeof data.value === 'string' ? data.value : String(data.value));
+      }
+    }
+    fetchSettings();
+  }, []);
 
   const currentConfig = selectedService ? getQuoteConfigByServiceId(selectedService) : null;
   const estimatedPrice = currentConfig ? calculateQuote(currentConfig, answers) : 0;
 
-  // Reset answers when service changes
+  // Reset answers when service changes, and initialize number fields with defaults
   useEffect(() => {
-    setAnswers({});
+    const config = selectedService ? getQuoteConfigByServiceId(selectedService) : null;
+    if (config) {
+      const initialAnswers: Record<string, string | number | string[]> = {};
+      config.questions.forEach((q) => {
+        if (q.type === "number") {
+          initialAnswers[q.id] = q.min || 1;
+        }
+      });
+      setAnswers(initialAnswers);
+    } else {
+      setAnswers({});
+    }
   }, [selectedService]);
 
   const handleAnswerChange = (questionId: string, value: string | number | string[]) => {
@@ -327,9 +357,9 @@ function QuoteWizardContent() {
               <Link href="/">
                 <Button variant="secondary">Return Home</Button>
               </Link>
-              <Link href="tel:+1234567890">
+              <Link href={`tel:${businessPhone.replace(/\D/g, '')}`}>
                 <Button leftIcon={<Phone className="w-5 h-5" />}>
-                  Call Us Now
+                  {businessPhone}
                 </Button>
               </Link>
             </div>
@@ -675,9 +705,9 @@ function QuoteWizardContent() {
               <Card className="mt-4">
                 <CardContent className="text-center">
                   <p className="text-charcoal-300 mb-3">Need help?</p>
-                  <Link href="tel:+1234567890">
+                  <Link href={`tel:${businessPhone.replace(/\D/g, '')}`}>
                     <Button variant="secondary" size="sm" leftIcon={<Phone className="w-4 h-4" />}>
-                      (123) 456-7890
+                      {businessPhone}
                     </Button>
                   </Link>
                 </CardContent>

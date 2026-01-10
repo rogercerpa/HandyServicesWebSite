@@ -1,0 +1,21 @@
+	A	B
+1	PROFIT CALCULATOR	
+2	Variable Costs	
+3	Selling Price (no sales tax)	180
+4	Landed Product Cost	30
+5	Packaging Costs	2
+6	3PL Pick & Pack Fee	3.5
+7	Shipping	5
+8	Gateway Fee ~ 4%	=B3*0.04
+9	SALES DATA	
+10	COGS %	=SUM(B4:B7)/B3
+11	Gross Margin ($)	=B3-SUM(B4:B7)
+12	Gross Margin (%)	=B11/B3
+13	Markup	=B11/B4
+14	MARKETING DATA	
+15	Customer Acquisition Cost	90
+16	MER	=B15/B3
+17	ROAS	=B3/B15
+18	PROFIT	
+19	Net Profit	=B11-B15
+
