@@ -56,7 +56,7 @@ export default function NotFound() {
               Contact Us
             </Link>
             <Link href="/quote" className="text-charcoal-400 hover:text-electric transition-colors">
-              Get a Quote
+              Schedule Consultation
             </Link>
           </div>
         </div>

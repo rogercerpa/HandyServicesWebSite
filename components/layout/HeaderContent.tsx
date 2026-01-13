@@ -3,7 +3,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { useState } from "react";
-import { Menu, X, Zap, Phone } from "lucide-react";
+import { Menu, X, Zap } from "lucide-react";
 import { Button } from "@/components/ui";
 import { cn } from "@/lib/utils";
 
@@ -23,8 +23,6 @@ const navigation = [
 
 export function HeaderContent({ phone, businessName, tagline, logoUrl }: HeaderContentProps) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  
-  const phoneClean = phone.replace(/[^0-9+]/g, '');
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 bg-charcoal/95 backdrop-blur-md border-b border-charcoal-800">
@@ -75,15 +73,8 @@ export function HeaderContent({ phone, businessName, tagline, logoUrl }: HeaderC
 
           {/* CTA Buttons */}
           <div className="hidden md:flex items-center gap-4">
-            <Link
-              href={`tel:${phoneClean}`}
-              className="flex items-center gap-2 text-charcoal-300 hover:text-electric transition-colors"
-            >
-              <Phone className="w-4 h-4" />
-              <span className="text-sm font-medium">{phone}</span>
-            </Link>
             <Link href="/quote">
-              <Button size="sm">Get a Quote</Button>
+              <Button size="sm">Schedule Consultation</Button>
             </Link>
           </div>
 
@@ -120,15 +111,8 @@ export function HeaderContent({ phone, businessName, tagline, logoUrl }: HeaderC
                 {item.name}
               </Link>
             ))}
-            <Link
-              href={`tel:${phoneClean}`}
-              className="flex items-center gap-2 text-charcoal-300 hover:text-electric py-2 transition-colors"
-            >
-              <Phone className="w-4 h-4" />
-              <span className="font-medium">{phone}</span>
-            </Link>
             <Link href="/quote" onClick={() => setMobileMenuOpen(false)}>
-              <Button className="w-full">Get a Quote</Button>
+              <Button className="w-full">Schedule Consultation</Button>
             </Link>
           </div>
         </div>

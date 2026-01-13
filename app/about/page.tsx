@@ -286,7 +286,7 @@ export default async function AboutPage() {
                 </p>
                 <Link href="/quote">
                   <Button className="w-full sm:w-auto">
-                    Get Your Free Quote
+                    Schedule Consultation
                   </Button>
                 </Link>
               </div>

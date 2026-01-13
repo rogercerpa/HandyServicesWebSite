@@ -20,7 +20,6 @@ import {
   CheckCircle,
   Calculator,
   Send,
-  Phone,
   Upload,
   X
 } from "lucide-react";
@@ -49,7 +48,6 @@ function QuoteWizardContent() {
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
-  const [businessPhone, setBusinessPhone] = useState("(123) 456-7890");
   const [services, setServices] = useState<Service[]>(staticServices);
   const [isLoadingServices, setIsLoadingServices] = useState(true);
 
@@ -89,23 +87,6 @@ function QuoteWizardContent() {
       setIsLoadingServices(false);
     }
     fetchServices();
-  }, []);
-
-  // Fetch site settings for phone number
-  useEffect(() => {
-    async function fetchSettings() {
-      const supabase = createClient();
-      const { data } = await supabase
-        .from("site_settings")
-        .select("value")
-        .eq("key", "phone")
-        .single();
-      
-      if (data?.value) {
-        setBusinessPhone(typeof data.value === 'string' ? data.value : String(data.value));
-      }
-    }
-    fetchSettings();
   }, []);
 
   const currentConfig = selectedService ? getQuoteConfigByServiceId(selectedService) : null;
@@ -396,11 +377,6 @@ function QuoteWizardContent() {
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link href="/">
                 <Button variant="secondary">Return Home</Button>
-              </Link>
-              <Link href={`tel:${businessPhone.replace(/\D/g, '')}`}>
-                <Button leftIcon={<Phone className="w-5 h-5" />}>
-                  {businessPhone}
-                </Button>
               </Link>
             </div>
           </div>
@@ -747,17 +723,6 @@ function QuoteWizardContent() {
                 </CardContent>
               </Card>
 
-              {/* Help Card */}
-              <Card className="mt-4">
-                <CardContent className="text-center">
-                  <p className="text-charcoal-300 mb-3">Need help?</p>
-                  <Link href={`tel:${businessPhone.replace(/\D/g, '')}`}>
-                    <Button variant="secondary" size="sm" leftIcon={<Phone className="w-4 h-4" />}>
-                      {businessPhone}
-                    </Button>
-                  </Link>
-                </CardContent>
-              </Card>
             </div>
           </div>
         </div>

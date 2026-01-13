@@ -13,7 +13,6 @@ import {
   CheckCircle, 
   Star, 
   ChevronDown,
-  Phone,
   Fan, 
   Lightbulb, 
   Sun, 
@@ -135,12 +134,7 @@ export default async function ServiceDetailPage({ params }: PageProps) {
               <div className="flex flex-col sm:flex-row gap-4">
                 <Link href={`/quote?service=${service.id}`}>
                   <Button size="lg" rightIcon={<ArrowRight className="w-5 h-5" />}>
-                    Get a Quote
-                  </Button>
-                </Link>
-                <Link href="tel:+1234567890">
-                  <Button variant="secondary" size="lg" leftIcon={<Phone className="w-5 h-5" />}>
-                    Call Now
+                    Schedule Consultation
                   </Button>
                 </Link>
               </div>
@@ -321,7 +315,7 @@ export default async function ServiceDetailPage({ params }: PageProps) {
             </p>
             <Link href={`/quote?service=${service.id}`}>
               <Button size="lg" rightIcon={<ArrowRight className="w-5 h-5" />}>
-                Get Your Free Quote
+                Schedule Consultation
               </Button>
             </Link>
           </div>

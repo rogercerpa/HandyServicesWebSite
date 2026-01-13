@@ -1,16 +1,12 @@
 import Link from "next/link";
 import { Button } from "@/components/ui";
-import { ArrowRight, Phone, Calendar } from "lucide-react";
-import { getSiteSettings, getPageContent } from "@/lib/data/settings-db";
+import { ArrowRight, Calendar } from "lucide-react";
+import { getPageContent } from "@/lib/data/settings-db";
 
 export async function CTASection() {
-  const [settings, pageContent] = await Promise.all([
-    getSiteSettings(),
-    getPageContent(),
-  ]);
+  const pageContent = await getPageContent();
   
   const cta = pageContent.cta;
-  const phoneClean = settings.phone.replace(/[^0-9+]/g, '');
 
   return (
     <section className="section-padding relative overflow-hidden">
@@ -19,7 +15,6 @@ export async function CTASection() {
           {/* Background decorations */}
           <div className="absolute top-0 right-0 w-96 h-96 bg-electric/10 rounded-full blur-3xl" />
           <div className="absolute bottom-0 left-0 w-72 h-72 bg-accent-orange/10 rounded-full blur-3xl" />
-          <div className="absolute inset-0 geometric-grid opacity-20" />
 
           <div className="relative z-10 max-w-3xl mx-auto text-center">
             {/* Icon */}
@@ -40,12 +35,7 @@ export async function CTASection() {
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link href="/quote">
                 <Button size="lg" rightIcon={<ArrowRight className="w-5 h-5" />}>
-                  Get Your Free Quote
-                </Button>
-              </Link>
-              <Link href={`tel:${phoneClean}`}>
-                <Button variant="secondary" size="lg" leftIcon={<Phone className="w-5 h-5" />}>
-                  Call Now
+                  Schedule Consultation
                 </Button>
               </Link>
             </div>

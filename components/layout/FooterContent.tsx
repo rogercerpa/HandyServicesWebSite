@@ -2,7 +2,8 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { Zap, Phone, Mail, MapPin, Clock, Facebook, Instagram } from "lucide-react";
+import { Zap, MapPin, Clock, Facebook, Instagram } from "lucide-react";
+import { type Service } from "@/lib/data/services";
 
 interface FooterContentProps {
   settings: {
@@ -17,25 +18,22 @@ interface FooterContentProps {
   branding: {
     business_name: string;
     tagline: string;
+    description: string;
     logo_url: string;
   };
+  services: Service[];
 }
-
-const services = [
-  { name: "Ceiling Fan Replacement", href: "/services/ceiling-fan-replacement" },
-  { name: "Light Fixture Installation", href: "/services/light-fixture-installation" },
-  { name: "Switch Upgrades", href: "/services/light-switches-replacement" },
-  { name: "Ring Camera Installation", href: "/services/ring-camera-installation" },
-];
 
 const company = [
   { name: "About Us", href: "/about" },
   { name: "Services", href: "/services" },
-  { name: "Get a Quote", href: "/quote" },
+  { name: "Schedule Consultation", href: "/quote" },
   { name: "Contact Us", href: "/contact" },
 ];
 
-export function FooterContent({ settings, branding }: FooterContentProps) {
+export function FooterContent({ settings, branding, services }: FooterContentProps) {
+  // Show first 4 active services, then "View All Services"
+  const displayedServices = services.slice(0, 4);
   return (
     <footer className="bg-charcoal-950 border-t border-charcoal-800">
       {/* Main Footer */}
@@ -69,8 +67,7 @@ export function FooterContent({ settings, branding }: FooterContentProps) {
               </div>
             </Link>
             <p className="text-charcoal-400 text-sm leading-relaxed mb-6">
-              Professional electrical and handyman services you can trust. 
-              Licensed, reliable, and committed to quality workmanship.
+              {branding.description || "Professional electrical and handyman services you can trust. Licensed, reliable, and committed to quality workmanship."}
             </p>
             <div className="flex gap-4">
               {settings.facebook_url && (
@@ -116,24 +113,26 @@ export function FooterContent({ settings, branding }: FooterContentProps) {
           <div>
             <h4 className="font-heading font-bold text-white mb-4">Services</h4>
             <ul className="space-y-3">
-              {services.map((service) => (
-                <li key={service.name}>
+              {displayedServices.map((service) => (
+                <li key={service.id}>
                   <Link
-                    href={service.href}
+                    href={`/services/${service.slug}`}
                     className="text-charcoal-400 hover:text-electric text-sm transition-colors"
                   >
                     {service.name}
                   </Link>
                 </li>
               ))}
-              <li>
-                <Link
-                  href="/services"
-                  className="text-electric text-sm font-medium hover:text-electric-400 transition-colors"
-                >
-                  View All Services →
-                </Link>
-              </li>
+              {services.length > 4 && (
+                <li>
+                  <Link
+                    href="/services"
+                    className="text-electric text-sm font-medium hover:text-electric-400 transition-colors"
+                  >
+                    View All Services →
+                  </Link>
+                </li>
+              )}
             </ul>
           </div>
 
@@ -166,28 +165,6 @@ export function FooterContent({ settings, branding }: FooterContentProps) {
           <div>
             <h4 className="font-heading font-bold text-white mb-4">Contact Us</h4>
             <ul className="space-y-4">
-              <li className="flex items-start gap-3">
-                <Phone className="w-5 h-5 text-electric mt-0.5" />
-                <div>
-                  <a
-                    href={`tel:${settings.phone.replace(/[^0-9+]/g, '')}`}
-                    className="text-charcoal-300 hover:text-white text-sm transition-colors"
-                  >
-                    {settings.phone}
-                  </a>
-                </div>
-              </li>
-              <li className="flex items-start gap-3">
-                <Mail className="w-5 h-5 text-electric mt-0.5" />
-                <div>
-                  <a
-                    href={`mailto:${settings.email}`}
-                    className="text-charcoal-300 hover:text-white text-sm transition-colors"
-                  >
-                    {settings.email}
-                  </a>
-                </div>
-              </li>
               <li className="flex items-start gap-3">
                 <MapPin className="w-5 h-5 text-electric mt-0.5" />
                 <span className="text-charcoal-400 text-sm">

@@ -1,16 +1,12 @@
 import Link from "next/link";
 import { Button } from "@/components/ui";
-import { ArrowRight, Phone, Star, CheckCircle } from "lucide-react";
-import { getSiteSettings, getPageContent } from "@/lib/data/settings-db";
+import { ArrowRight, Star, CheckCircle } from "lucide-react";
+import { getPageContent } from "@/lib/data/settings-db";
 
 export async function Hero() {
-  const [settings, pageContent] = await Promise.all([
-    getSiteSettings(),
-    getPageContent(),
-  ]);
+  const pageContent = await getPageContent();
   
   const hero = pageContent.hero;
-  const phoneClean = settings.phone.replace(/[^0-9+]/g, '');
 
   return (
     <section className="relative min-h-[90vh] flex items-center overflow-hidden">
@@ -48,12 +44,7 @@ export async function Hero() {
           <div className="flex flex-col sm:flex-row gap-4 mb-12 animate-fade-in-up animation-delay-200">
             <Link href="/quote">
               <Button size="lg" rightIcon={<ArrowRight className="w-5 h-5" />}>
-                Get a Free Quote
-              </Button>
-            </Link>
-            <Link href={`tel:${phoneClean}`}>
-              <Button variant="secondary" size="lg" leftIcon={<Phone className="w-5 h-5" />}>
-                {settings.phone}
+                Schedule Consultation
               </Button>
             </Link>
           </div>

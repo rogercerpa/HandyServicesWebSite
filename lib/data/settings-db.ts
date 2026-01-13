@@ -255,6 +255,7 @@ export async function getFAQs() {
 export interface BrandingSettings {
   business_name: string;
   tagline: string;
+  description: string;
   logo_url: string;
   favicon_url: string;
 }
@@ -262,6 +263,7 @@ export interface BrandingSettings {
 const defaultBranding: BrandingSettings = {
   business_name: "Fix it, papa!",
   tagline: "Handyman Services",
+  description: "Professional electrical and handyman services you can trust. Licensed, reliable, and committed to quality workmanship.",
   logo_url: "",
   favicon_url: "",
 };

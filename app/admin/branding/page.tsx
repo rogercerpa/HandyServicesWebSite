@@ -3,13 +3,14 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
-import { Card, CardContent, Button, Input } from "@/components/ui";
+import { Card, CardContent, Button, Input, Textarea } from "@/components/ui";
 import Image from "next/image";
 import { Save, Building2, Image as ImageIcon, Loader2, Zap, Upload, X } from "lucide-react";
 
 interface BrandingSettings {
   business_name: string;
   tagline: string;
+  description: string;
   logo_url: string;
   favicon_url: string;
 }
@@ -17,6 +18,7 @@ interface BrandingSettings {
 const defaultSettings: BrandingSettings = {
   business_name: "Fix it, papa!",
   tagline: "Handyman Services",
+  description: "Professional electrical and handyman services you can trust. Licensed, reliable, and committed to quality workmanship.",
   logo_url: "",
   favicon_url: "",
 };
@@ -178,6 +180,14 @@ export default function BrandingPage() {
               onChange={(e) => setSettings({ ...settings, tagline: e.target.value })}
               placeholder="Handyman Services"
               helperText="Short description shown below the business name"
+            />
+            <Textarea
+              label="Business Description"
+              value={settings.description}
+              onChange={(e) => setSettings({ ...settings, description: e.target.value })}
+              placeholder="Professional electrical and handyman services you can trust..."
+              rows={3}
+              helperText="This description appears in the footer"
             />
           </div>
         </CardContent>

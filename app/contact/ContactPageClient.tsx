@@ -3,8 +3,6 @@
 import { useState } from "react";
 import { Card, CardContent, Button, Input, Textarea, Select } from "@/components/ui";
 import { 
-  Phone, 
-  Mail, 
   MapPin, 
   Clock, 
   Send,
@@ -49,8 +47,6 @@ export default function ContactPageClient({ services, settings, faqs }: ContactP
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
-  
-  const phoneClean = settings.phone.replace(/[^0-9+]/g, '');
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -121,46 +117,6 @@ export default function ContactPageClient({ services, settings, faqs }: ContactP
             {/* Contact Info */}
             <div className="space-y-6">
               {/* Quick Contact Cards */}
-              <Card>
-                <CardContent className="flex items-start gap-4">
-                  <div className="w-12 h-12 bg-electric/10 rounded-xl flex items-center justify-center flex-shrink-0">
-                    <Phone className="w-6 h-6 text-electric" />
-                  </div>
-                  <div>
-                    <h3 className="font-semibold text-white mb-1">Phone</h3>
-                    <a 
-                      href={`tel:${phoneClean}`} 
-                      className="text-charcoal-300 hover:text-electric transition-colors"
-                    >
-                      {settings.phone}
-                    </a>
-                    <p className="text-sm text-charcoal-500 mt-1">
-                      Call for immediate assistance
-                    </p>
-                  </div>
-                </CardContent>
-              </Card>
-
-              <Card>
-                <CardContent className="flex items-start gap-4">
-                  <div className="w-12 h-12 bg-electric/10 rounded-xl flex items-center justify-center flex-shrink-0">
-                    <Mail className="w-6 h-6 text-electric" />
-                  </div>
-                  <div>
-                    <h3 className="font-semibold text-white mb-1">Email</h3>
-                    <a 
-                      href={`mailto:${settings.email}`} 
-                      className="text-charcoal-300 hover:text-electric transition-colors"
-                    >
-                      {settings.email}
-                    </a>
-                    <p className="text-sm text-charcoal-500 mt-1">
-                      We&apos;ll respond within 24 hours
-                    </p>
-                  </div>
-                </CardContent>
-              </Card>
-
               <Card>
                 <CardContent className="flex items-start gap-4">
                   <div className="w-12 h-12 bg-electric/10 rounded-xl flex items-center justify-center flex-shrink-0">
