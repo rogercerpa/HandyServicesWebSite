@@ -75,6 +75,13 @@ export interface WhyChooseUsItem {
   description: string;
 }
 
+export interface ServicesPageContent {
+  badge_text: string;
+  headline: string;
+  headline_highlight: string;
+  description: string;
+}
+
 export interface PageContent {
   hero: {
     badge_text: string;
@@ -83,6 +90,7 @@ export interface PageContent {
     subheadline: string;
     trust_points: string[];
   };
+  services_page: ServicesPageContent;
   about: {
     // Hero section
     hero_headline: string;
@@ -125,6 +133,12 @@ const defaultPageContent: PageContent = {
     headline_highlight: "Handyman Services",
     subheadline: "From ceiling fans to smart home installations, we handle all your electrical needs with precision, reliability, and fair pricing. Licensed professionals, guaranteed satisfaction.",
     trust_points: ["Licensed & Insured", "Same-Day Service", "Satisfaction Guaranteed"],
+  },
+  services_page: {
+    badge_text: "Our Services",
+    headline: "Professional Electrical &",
+    headline_highlight: "Handyman Solutions",
+    description: "From quick repairs to complete installations, we provide expert service for all your home electrical needs. Click any service below to learn more and schedule an appointment.",
   },
   about: {
     // Hero section
@@ -192,6 +206,7 @@ export async function getPageContent(): Promise<PageContent> {
     const content: Partial<PageContent> = {};
     data.forEach((item: { page_key: string; content: any }) => {
       if (item.page_key === "hero") content.hero = { ...defaultPageContent.hero, ...item.content };
+      if (item.page_key === "services_page") content.services_page = { ...defaultPageContent.services_page, ...item.content };
       if (item.page_key === "about") content.about = { ...defaultPageContent.about, ...item.content };
       if (item.page_key === "cta") content.cta = { ...defaultPageContent.cta, ...item.content };
     });

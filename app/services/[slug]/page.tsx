@@ -2,7 +2,7 @@ import { Metadata } from "next";
 import Link from "next/link";
 import Image from "next/image";
 import { notFound } from "next/navigation";
-import { services, getServiceBySlug, getRelatedServices } from "@/lib/data/services";
+import { getServicesFromDB, getServiceBySlugFromDB, getRelatedServicesFromDB } from "@/lib/data/services-db";
 import { getTestimonialsByService } from "@/lib/data/testimonials";
 import { Card, CardContent, Button, Badge } from "@/components/ui";
 import { formatCurrency } from "@/lib/utils";
@@ -40,6 +40,7 @@ interface PageProps {
 }
 
 export async function generateStaticParams() {
+  const services = await getServicesFromDB();
   return services.map((service) => ({
     slug: service.slug,
   }));
@@ -47,7 +48,7 @@ export async function generateStaticParams() {
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { slug } = await params;
-  const service = getServiceBySlug(slug);
+  const service = await getServiceBySlugFromDB(slug);
   
   if (!service) {
     return {
@@ -63,14 +64,14 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
 export default async function ServiceDetailPage({ params }: PageProps) {
   const { slug } = await params;
-  const service = getServiceBySlug(slug);
+  const service = await getServiceBySlugFromDB(slug);
 
   if (!service) {
     notFound();
   }
 
   const IconComponent = iconMap[service.icon] || Zap;
-  const relatedServices = getRelatedServices(service.relatedServices);
+  const relatedServices = await getRelatedServicesFromDB(service.relatedServices);
   const reviews = getTestimonialsByService(service.name);
 
   return (

@@ -4,7 +4,7 @@ import { useState, useEffect, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { Card, CardContent, Button, Input, Select } from "@/components/ui";
-import { services } from "@/lib/data/services";
+import { services as staticServices, type Service } from "@/lib/data/services";
 import { createClient } from "@/lib/supabase/client";
 import { 
   quoteConfigurations, 
@@ -50,6 +50,46 @@ function QuoteWizardContent() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [businessPhone, setBusinessPhone] = useState("(123) 456-7890");
+  const [services, setServices] = useState<Service[]>(staticServices);
+  const [isLoadingServices, setIsLoadingServices] = useState(true);
+
+  // Fetch services from database
+  useEffect(() => {
+    async function fetchServices() {
+      const supabase = createClient();
+      const { data, error } = await supabase
+        .from("services")
+        .select("*")
+        .eq("is_active", true)
+        .order("sort_order", { ascending: true });
+
+      if (error) {
+        console.error("Error fetching services:", error);
+        setServices(staticServices);
+      } else if (data && data.length > 0) {
+        // Transform database format to match Service interface
+        const transformedServices: Service[] = data.map((s: any) => ({
+          id: s.slug,
+          slug: s.slug,
+          name: s.name,
+          shortDescription: s.short_description || "",
+          fullDescription: s.full_description || "",
+          icon: s.icon || "Zap",
+          image: s.image || "",
+          startingPrice: Number(s.starting_price) || 0,
+          priceNote: s.price_note || undefined,
+          duration: s.duration || "",
+          features: Array.isArray(s.features) ? s.features : [],
+          process: Array.isArray(s.process) ? s.process : [],
+          faq: Array.isArray(s.faq) ? s.faq : [],
+          relatedServices: Array.isArray(s.related_services) ? s.related_services : [],
+        }));
+        setServices(transformedServices);
+      }
+      setIsLoadingServices(false);
+    }
+    fetchServices();
+  }, []);
 
   // Fetch site settings for phone number
   useEffect(() => {
@@ -435,6 +475,11 @@ function QuoteWizardContent() {
                     <h2 className="font-heading text-xl font-bold text-white mb-6">
                       What service do you need?
                     </h2>
+                    {isLoadingServices ? (
+                      <div className="flex items-center justify-center py-12">
+                        <div className="w-8 h-8 border-4 border-electric border-t-transparent rounded-full animate-spin" />
+                      </div>
+                    ) : (
                     <div className="grid sm:grid-cols-2 gap-3">
                       {services.map((service) => (
                         <label
@@ -475,6 +520,7 @@ function QuoteWizardContent() {
                         </label>
                       ))}
                     </div>
+                    )}
                   </div>
                 )}
 

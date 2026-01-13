@@ -5,13 +5,16 @@ import {
   Testimonials,
   CTASection,
 } from "@/components/home";
+import { getServicesFromDB } from "@/lib/data/services-db";
 
-export default function HomePage() {
+export default async function HomePage() {
+  const services = await getServicesFromDB();
+
   return (
     <>
       <Hero />
       <TrustIndicators />
-      <FeaturedServices />
+      <FeaturedServices services={services} />
       <Testimonials />
       <CTASection />
     </>

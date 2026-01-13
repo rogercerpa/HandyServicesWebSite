@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { services } from "@/lib/data/services";
+import { type Service } from "@/lib/data/services";
 import { Card, CardContent, Button } from "@/components/ui";
 import { ArrowRight, Fan, Lightbulb, Sun, ToggleRight, Sliders, Plug, Zap, Camera } from "lucide-react";
 import { formatCurrency } from "@/lib/utils";
@@ -15,7 +15,11 @@ const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
   Camera,
 };
 
-export function FeaturedServices() {
+interface FeaturedServicesProps {
+  services: Service[];
+}
+
+export function FeaturedServices({ services }: FeaturedServicesProps) {
   return (
     <section className="section-padding relative overflow-hidden">
       {/* Background Pattern */}

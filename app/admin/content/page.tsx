@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { Card, CardContent, Button, Input, Textarea } from "@/components/ui";
-import { Save, Home, Info, Plus, Trash2, Loader2, ChevronDown, ChevronUp } from "lucide-react";
+import { Save, Home, Info, Plus, Trash2, Loader2, ChevronDown, ChevronUp, Zap } from "lucide-react";
 
 interface HeroContent {
   badge_text: string;
@@ -60,6 +60,13 @@ interface CTAContent {
   trust_note: string;
 }
 
+interface ServicesPageContent {
+  badge_text: string;
+  headline: string;
+  headline_highlight: string;
+  description: string;
+}
+
 const defaultHero: HeroContent = {
   badge_text: "Trusted by 500+ homeowners in the Metro Area",
   headline: "Expert Electrical &",
@@ -105,11 +112,18 @@ const defaultCTA: CTAContent = {
   trust_note: "No obligation • Free estimates • Same-day response",
 };
 
+const defaultServicesPage: ServicesPageContent = {
+  badge_text: "Our Services",
+  headline: "Professional Electrical &",
+  headline_highlight: "Handyman Solutions",
+  description: "From quick repairs to complete installations, we provide expert service for all your home electrical needs. Click any service below to learn more and schedule an appointment.",
+};
+
 const iconOptions = ["Shield", "Heart", "Target", "Clock", "Wrench", "Star", "Zap", "Award", "CheckCircle", "ThumbsUp"];
 
 export default function ContentPage() {
   const router = useRouter();
-  const [activeTab, setActiveTab] = useState<"hero" | "about" | "cta">("hero");
+  const [activeTab, setActiveTab] = useState<"hero" | "services" | "about" | "cta">("hero");
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
   const [message, setMessage] = useState<{ type: "success" | "error"; text: string } | null>(null);
@@ -130,6 +144,7 @@ export default function ContentPage() {
   };
 
   const [hero, setHero] = useState<HeroContent>(defaultHero);
+  const [servicesPage, setServicesPage] = useState<ServicesPageContent>(defaultServicesPage);
   const [about, setAbout] = useState<AboutContent>(defaultAbout);
   const [cta, setCTA] = useState<CTAContent>(defaultCTA);
 
@@ -146,6 +161,7 @@ export default function ContentPage() {
     if (!error && data) {
       data.forEach((item: any) => {
         if (item.page_key === "hero") setHero({ ...defaultHero, ...item.content });
+        if (item.page_key === "services_page") setServicesPage({ ...defaultServicesPage, ...item.content });
         if (item.page_key === "about") setAbout({ ...defaultAbout, ...item.content });
         if (item.page_key === "cta") setCTA({ ...defaultCTA, ...item.content });
       });
@@ -162,6 +178,7 @@ export default function ContentPage() {
     try {
       const contents = [
         { page_key: "hero", content: hero },
+        { page_key: "services_page", content: servicesPage },
         { page_key: "about", content: about },
         { page_key: "cta", content: cta },
       ];
@@ -269,7 +286,7 @@ export default function ContentPage() {
       )}
 
       {/* Tab Navigation */}
-      <div className="flex gap-2 bg-charcoal-800 p-1 rounded-xl w-fit">
+      <div className="flex flex-wrap gap-2 bg-charcoal-800 p-1 rounded-xl w-fit">
         <button
           onClick={() => setActiveTab("hero")}
           className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
@@ -277,7 +294,16 @@ export default function ContentPage() {
           }`}
         >
           <Home className="w-4 h-4" />
-          Hero Section
+          Homepage Hero
+        </button>
+        <button
+          onClick={() => setActiveTab("services")}
+          className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+            activeTab === "services" ? "bg-electric text-charcoal" : "text-charcoal-300 hover:text-white"
+          }`}
+        >
+          <Zap className="w-4 h-4" />
+          Services Page
         </button>
         <button
           onClick={() => setActiveTab("about")}
@@ -368,6 +394,50 @@ export default function ContentPage() {
                   ))}
                 </div>
               </div>
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
+      {/* Services Page Editor */}
+      {activeTab === "services" && (
+        <Card>
+          <CardContent>
+            <h3 className="font-heading text-lg font-bold text-white mb-6">
+              Services Page Hero Section
+            </h3>
+
+            <div className="space-y-5">
+              <Input
+                label="Badge Text"
+                value={servicesPage.badge_text}
+                onChange={(e) => setServicesPage({ ...servicesPage, badge_text: e.target.value })}
+                placeholder="Our Services"
+              />
+
+              <div className="grid sm:grid-cols-2 gap-5">
+                <Input
+                  label="Headline (Part 1)"
+                  value={servicesPage.headline}
+                  onChange={(e) => setServicesPage({ ...servicesPage, headline: e.target.value })}
+                  placeholder="Professional Electrical &"
+                />
+                <Input
+                  label="Headline Highlight"
+                  value={servicesPage.headline_highlight}
+                  onChange={(e) => setServicesPage({ ...servicesPage, headline_highlight: e.target.value })}
+                  placeholder="Handyman Solutions"
+                  helperText="This text will be highlighted"
+                />
+              </div>
+
+              <Textarea
+                label="Description"
+                value={servicesPage.description}
+                onChange={(e) => setServicesPage({ ...servicesPage, description: e.target.value })}
+                rows={3}
+                placeholder="From quick repairs to complete installations..."
+              />
             </div>
           </CardContent>
         </Card>

@@ -1,6 +1,7 @@
 import { Metadata } from "next";
 import Link from "next/link";
-import { services } from "@/lib/data/services";
+import { getServicesFromDB } from "@/lib/data/services-db";
+import { getPageContent } from "@/lib/data/settings-db";
 import { Card, CardContent, Button } from "@/components/ui";
 import { formatCurrency } from "@/lib/utils";
 import { ArrowRight, Fan, Lightbulb, Sun, ToggleRight, Sliders, Plug, Zap, Camera, Clock } from "lucide-react";
@@ -22,7 +23,14 @@ const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
   Camera,
 };
 
-export default function ServicesPage() {
+export default async function ServicesPage() {
+  const [services, pageContent] = await Promise.all([
+    getServicesFromDB(),
+    getPageContent(),
+  ]);
+  
+  const { services_page } = pageContent;
+
   return (
     <div className="pt-20">
       {/* Hero Section */}
@@ -33,16 +41,14 @@ export default function ServicesPage() {
         <div className="container-custom relative z-10">
           <div className="max-w-3xl mx-auto text-center">
             <span className="inline-block text-electric font-semibold mb-4 tracking-wide uppercase text-sm">
-              Our Services
+              {services_page.badge_text}
             </span>
             <h1 className="font-heading text-4xl sm:text-5xl font-bold text-white mb-6">
-              Professional Electrical &{" "}
-              <span className="text-gradient">Handyman Solutions</span>
+              {services_page.headline}{" "}
+              <span className="text-gradient">{services_page.headline_highlight}</span>
             </h1>
             <p className="text-lg text-charcoal-300">
-              From quick repairs to complete installations, we provide expert 
-              service for all your home electrical needs. Click any service 
-              below to learn more and schedule an appointment.
+              {services_page.description}
             </p>
           </div>
         </div>
